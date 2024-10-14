@@ -2,93 +2,93 @@ syntax = "proto3";
 
 package auth;
 
-import "google/protobuf/field_mask.proto";
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
 
 option go_package = "github.com/MAXXXIMUS-tropical-milkshake/beatflow-protos;authv1";
 
 service Auth {
-    rpc Login (LoginRequest) returns (LoginResponse) {}
-    rpc Signup (SignupRequest) returns (SignupResponse) {}
-    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc Signup(SignupRequest) returns (SignupResponse) {}
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
 }
 
 message LoginRequest {
-    string email = 1 [(buf.validate.field).cel = {
-        id: "valid_email"
-        message: "email must be a valid email"
-        expression: "this.isEmail()"
-    }];
-    string password = 2 [(buf.validate.field).string = {
-        min_len: 8
-        max_len: 72
-    }];
+  string email = 1 [(buf.validate.field).cel = {
+    id: "valid_email"
+    message: "email must be a valid email"
+    expression: "this.isEmail()"
+  }];
+  string password = 2 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 72
+  }];
 }
 
 message LoginResponse {
-    string token = 1;
+  string token = 1;
 }
 
 message SignupRequest {
-    string username = 1 [(buf.validate.field).string = {
-        min_len: 3
-        max_len: 32
-    }];
-    string email = 2 [(buf.validate.field).cel = {
-        id: "valid_email"
-        message: "email must be a valid email"
-        expression: "this.isEmail()"
-    }];
-    string password = 3 [(buf.validate.field).string = {
-        min_len: 8
-        max_len: 72
-    }];
+  string username = 1 [(buf.validate.field).string = {
+    min_len: 3
+    max_len: 32
+  }];
+  string email = 2 [(buf.validate.field).cel = {
+    id: "valid_email"
+    message: "email must be a valid email"
+    expression: "this.isEmail()"
+  }];
+  string password = 3 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 72
+  }];
 }
 
 message SignupResponse {
-    int64 user_id = 1;
-    string username = 2;
-    string email = 3;
+  int64 user_id = 1;
+  string username = 2;
+  string email = 3;
 }
 
 message UpdatePassword {
-    string old_password = 1 [(buf.validate.field).string = {
-        min_len: 8
-        max_len: 72
-    }];
-    string new_password = 2 [(buf.validate.field).string = {
-        min_len: 8
-        max_len: 72
-    }];
+  string old_password = 1 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 72
+  }];
+  string new_password = 2 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 72
+  }];
 }
 
 message UpdateUser {
-    string username = 1 [(buf.validate.field).string = {
-        min_len: 3
-        max_len: 32
-    }];
-    string email = 2 [(buf.validate.field).cel = {
-        id: "valid_email"
-        message: "email must be a valid email"
-        expression: "this.isEmail()"
-    }];
-    UpdatePassword password = 3 [(buf.validate.field).string = {
-        min_len: 8
-        max_len: 72
-    }];
+  string username = 1 [(buf.validate.field).string = {
+    min_len: 3
+    max_len: 32
+  }];
+  string email = 2 [(buf.validate.field).cel = {
+    id: "valid_email"
+    message: "email must be a valid email"
+    expression: "this.isEmail()"
+  }];
+  UpdatePassword password = 3 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 72
+  }];
 }
 
 message UpdateUserRequest {
-    UpdateUser user = 1;
-    google.protobuf.FieldMask update_mask = 2 [(buf.validate.field).cel = {
-        id: "valid_field_mask"
-        message: "a field mask path must be one of username, email and password"
-        expression: "this.paths.all(path, path in ['username', 'email', 'password'])"
-    }];
+  UpdateUser user = 1;
+  google.protobuf.FieldMask update_mask = 2 [(buf.validate.field).cel = {
+    id: "valid_field_mask"
+    message: "a field mask path must be one of username, email and password"
+    expression: "this.paths.all(path, path in ['username', 'email', 'password'])"
+  }];
 }
 
 message UpdateUserResponse {
-    int64 user_id = 1;
-    string username = 2;
-    string email = 3;
+  int64 user_id = 1;
+  string username = 2;
+  string email = 3;
 }
